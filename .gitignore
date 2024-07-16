@@ -1,0 +1,5 @@
+key.json
+key.*
+pull-secret.txt
+openshift-install
+gcp/
