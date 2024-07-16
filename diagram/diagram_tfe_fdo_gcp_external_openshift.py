@@ -6,6 +6,7 @@ from diagrams.gcp.compute import ComputeEngine
 from diagrams.gcp.database import SQL, Memorystore
 from diagrams.gcp.storage import Filestore
 from diagrams.generic.os  import RedHat
+from diagrams.k8s.compute import Pod
 
 
 # Variables
@@ -29,6 +30,8 @@ with Diagram(
         with Cluster("vpc"):
           with Cluster("subnet_public1"):
             OpenShift = RedHat("OpenShift")
+            with Cluster("OpenShift"):
+              TFE = Pod("TFE")
           with Cluster("subnet_services"):
             postgresql = SQL("PostgreSQL database")
             redis = Memorystore("Redis")
@@ -36,7 +39,7 @@ with Diagram(
                
     # Diagram
 
-    user >> OpenShift >> [postgresql,
+    user >> OpenShift >> TFE >> [postgresql,
                                  bucket,
                                  redis]
    
