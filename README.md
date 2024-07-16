@@ -98,7 +98,7 @@ We will start by creating an OpenShift cluster on GCP using the install_openshif
 
 - Make sure you copy the `key.json` file to your home directory `~/.gcp/`
 ```
-mkdir ~/.gcp && cp hc-a3334ce9ec6c4fa6bfeeffb7b68.json ~/.gcp/osServiceAccount.json
+mkdir ~/.gcp && cp hc-*********.json ~/.gcp/osServiceAccount.json
 ```
 - Go to the directory 
 ```
@@ -114,7 +114,7 @@ example:
 ```
 ? Platform gcp
 INFO Credentials loaded from file "/Users/patrickmunne/.gcp/osServiceAccount.json" 
-? Project ID projects/378096698853 (hc-**********)
+? Project ID projects/378096******** (hc-**********)
 ? Region europe-west4
 ? Base Domain hc-**********.gcp.sbx.hashicorpdemo.com
 ? Cluster Name patrick-openshift
@@ -161,7 +161,7 @@ tag_prefix        = "tfe31"                            # TAG prefix for names to
 # gcp
 gcp_region        = "europe-west4"                     # GCP region creating the resources
 vnet_name         = "patrick-openshift-z7ljb-network"  # GCP vnet created by openshift installer
-gcp_project       = "hc-ff9323d13b0e4e0da8171"         # GCP project id (found in keys.json)
+gcp_project       = "hc-**************"                # GCP project id (found in keys.json)
 gcp_location      = "EU"                               # location to create SQL and bucket 
 rds_password      = "Password#1"                       # password used for PostgreSQL
 ```
@@ -217,18 +217,6 @@ tfe_license                = "<your_tfe_license_raw_text>"             # Your TF
 tfe_release                = "v202406-1"                               # The version of TFE application you wish to be deployed. Beta version v202406-1
 # AWS
 region                     = "eu-north-1"                              # To create the DNS record on AWS          
-```
-- alter the file `provider.tf` to make sure the kubernetes and helm provider point to the correct config file
-```
-provider "kubernetes" {
-  config_path = "../gcp/auth/kubeconfig"
-}
-
-provider "helm" {
-  kubernetes {
-    config_path = "../gcp/auth/kubeconfig"
-  }
-}
 ```
 - Initialize the environment
 ```
