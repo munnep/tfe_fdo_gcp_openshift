@@ -26,6 +26,7 @@ env:
     TFE_REDIS_HOST: ${redis_host}:${redis_port}
     TFE_REDIS_USE_AUTH: false
     TFE_IACT_SUBNETS: "0.0.0.0/0"
+    TFE_RUN_PIPELINE_IMAGE: "patrickmunne/custom-agent-openshift:latest"
   secrets:
     TFE_DATABASE_PASSWORD: ${pg_password}
     TFE_ENCRYPTION_PASSWORD:  ${enc_password}
