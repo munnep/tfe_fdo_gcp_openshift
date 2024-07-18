@@ -8,6 +8,11 @@ This is a repository to have a TFE FDO with OpenShift on GCP. This is using a Po
 
 # Prerequisites
 
+## Custom Agent image
+
+The default worker supplied with TFE doesn't work on OpenShift. You need a custom image with some specific directories. The custom agent image referenced in the TFE deployment points to the following Docker image [here](https://hub.docker.com/repository/docker/patrickmunne/custom-agent-openshift/general)
+
+
 ## License
 Make sure you have a TFE license available for use
 
