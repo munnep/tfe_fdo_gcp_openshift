@@ -21,8 +21,6 @@ USER root
 RUN mkdir /.tfc-agent && \
     chmod 770 /.tfc-agent
 
-ADD hooks /.tfc-agent/hooks
-
 USER tfc-agent
 ```
 
