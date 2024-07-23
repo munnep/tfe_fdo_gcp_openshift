@@ -12,6 +12,20 @@ This is a repository to have a TFE FDO with OpenShift on GCP. This is using a Po
 
 The default worker supplied with TFE doesn't work on OpenShift. You need a custom image with some specific directories. The custom agent image referenced in the TFE deployment points to the following Docker image [here](https://hub.docker.com/repository/docker/patrickmunne/custom-agent-openshift/general)
 
+Example docker image
+```
+FROM hashicorp/tfc-agent:latest
+
+USER root
+
+RUN mkdir /.tfc-agent && \
+    chmod 770 /.tfc-agent
+
+ADD hooks /.tfc-agent/hooks
+
+USER tfc-agent
+```
+
 
 ## License
 Make sure you have a TFE license available for use
@@ -24,6 +38,7 @@ Have your GCP credentials configured
 gcloud config set account <your account>
 gcloud auth activate-service-account --key-file=key.json
 gcloud config set project <your project>
+gcloud auth application-default login
 export USE_GKE_GCLOUD_AUTH_PLUGIN=True      # needed to work correctly with kubectl and getting credentials later
 ```
 
@@ -44,11 +59,29 @@ export USE_GKE_GCLOUD_AUTH_PLUGIN=True      # needed to work correctly with kube
 - Google Cloud APIs
 - Service Management API
 - Google Cloud Storage JSON API
-- Cloud Storage
+- Cloud Storage API
 - Cloud SQL admin API
 - Google Cloud Memorystore for Redis API
 - Service Networking API
  
+```
+gcloud services enable serviceusage.googleapis.com      # this might give an error to be enabled from the console first with a link. 
+
+gcloud services enable compute.googleapis.com
+gcloud services enable cloudresourcemanager.googleapis.com
+gcloud services enable dns.googleapis.com
+gcloud services enable iamcredentials.googleapis.com
+gcloud services enable iam.googleapis.com
+gcloud services enable cloudapis.googleapis.com
+gcloud services enable servicemanagement.googleapis.com
+gcloud services enable storage-api.googleapis.com
+gcloud services enable storage.googleapis.com
+gcloud services enable servicenetworking.googleapis.com
+gcloud services enable sqladmin.googleapis.com
+gcloud services enable redis.googleapis.com
+gcloud services enable container.googleapis.com
+```
+
 
 #### Following roles assigned to your account
 
@@ -71,10 +104,6 @@ Option 2:
 - Service Account Key Admin
 - Service Account User
 - Storage Admin
-
-## AWS
-
-This repository uses AWS resources for the DNS resources and creating the DNS records
 
 ## Install terraform  
 See the following documentation [How to install Terraform](https://learn.hashicorp.com/tutorials/terraform/install-cli)
@@ -103,7 +132,7 @@ We will start by creating an OpenShift cluster on GCP using the install_openshif
 
 - Make sure you copy the `key.json` file to your home directory `~/.gcp/`
 ```
-mkdir ~/.gcp && cp hc-*********.json ~/.gcp/osServiceAccount.json
+mkdir ~/.gcp && cp key.json ~/.gcp/osServiceAccount.json
 ```
 - Go to the directory 
 ```
@@ -135,7 +164,7 @@ INFO Time elapsed: 37m57s
 ```
 - set your kubeconfig correct
 ```
-export KUBECONFIG=/Users/patrickmunne/git/tfe_fdo_gcp_openshift/gcp/auth/kubeconfig'
+export KUBECONFIG=/Users/patrickmunne/git/tfe_fdo_gcp_openshift/gcp/auth/kubeconfig
 ```
 - Test the kubectl
 ```
@@ -212,16 +241,14 @@ cd ../tfe
 ```
 - Create a file called `variables.auto.tfvars` with the following contents
 ```
-dns_hostname               = "tfe31"                                   # Hostname used for TFE
-dns_zonename               = "aws.munnep.com"                          # DNS zone where the hostname record can be created
-certificate_email          = "patrick.munne@hashicorp.com"             # email address used for creating valid certificates
-tfe_encryption_password    = "Password#1"                              # encryption key used by TFE
-tfe_license                = "02MV4UU43BK5HGYYTOJZ"                    # TFE license as a string
-replica_count              = 1                                         # Number of replicas for TFE you would like to have started
-tfe_license                = "<your_tfe_license_raw_text>"             # Your TFE license in raw text
-tfe_release                = "v202406-1"                               # The version of TFE application you wish to be deployed. Beta version v202406-1
-# AWS
-region                     = "eu-north-1"                              # To create the DNS record on AWS          
+dns_hostname               = "tfe31"                                                    # Hostname used for TFE
+dns_zonename               = "hc-f6e8cf7d73ed4891b6f92ecde75.gcp.sbx.hashicorpdemo.com" # DNS zone where the hostname record can be created
+certificate_email          = "patrick.munne@hashicorp.com"                              # email address used for creating valid certificates
+tfe_encryption_password    = "Password#1"                                               # encryption key used by TFE
+tfe_license                = "02MV4UU43BK5HGYYTOJZ"                                     # TFE license as a string
+replica_count              = 1                                                          # Number of replicas for TFE you would like to have started
+tfe_license                = "<your_tfe_license_raw_text>"                              # Your TFE license in raw text
+tfe_release                = "v202406-1"                                                # The version of TFE application you wish to be deployed. Beta version v202406-1
 ```
 - Initialize the environment
 ```
@@ -244,6 +271,23 @@ tfe_application_url = "https://tfe31.aws.munnep.com"
   - Create a user called admin with the password specified
   - Create an organization called test
 - login to the application on url https://tfe31.aws.munnep.com
+
+
+## Destroy the environment
+- Destroy the TFE environment
+```
+cd tfe/
+terraform destroy
+```
+- Destroy the Infra
+```
+cd infra/
+terraform destroy
+```
+- Destroy the openshift cluster
+```
+./openshift-install destroy cluster --dir ./gcp --log-level info 
+```
 
 # TODO
 

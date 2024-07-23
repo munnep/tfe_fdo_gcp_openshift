@@ -9,6 +9,10 @@ resource "kubernetes_namespace" "terraform-enterprise" {
   metadata {
     name = local.namespace
   }
+
+  lifecycle {
+    ignore_changes = [ metadata[0].annotations ]
+  }
 }
 
 resource "kubernetes_secret" "example" {
