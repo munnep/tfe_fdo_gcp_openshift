@@ -243,7 +243,6 @@ dns_hostname               = "tfe31"                                            
 dns_zonename               = "hc-f6e8cf7d73ed4891b6f92ecde75.gcp.sbx.hashicorpdemo.com" # DNS zone where the hostname record can be created
 certificate_email          = "patrick.munne@hashicorp.com"                              # email address used for creating valid certificates
 tfe_encryption_password    = "Password#1"                                               # encryption key used by TFE
-tfe_license                = "02MV4UU43BK5HGYYTOJZ"                                     # TFE license as a string
 replica_count              = 1                                                          # Number of replicas for TFE you would like to have started
 tfe_license                = "<your_tfe_license_raw_text>"                              # Your TFE license in raw text
 tfe_release                = "v202406-1"                                                # The version of TFE application you wish to be deployed. Beta version v202406-1
