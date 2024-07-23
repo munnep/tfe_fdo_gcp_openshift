@@ -41,17 +41,12 @@ data "terraform_remote_state" "infra" {
 
 data "google_client_config" "provider" {}
 
-# data "google_container_cluster" "my_cluster" {
-#   name     = data.terraform_remote_state.infra.outputs.cluster-name
-#   location = data.terraform_remote_state.infra.outputs.gcp_region
-# }
-
 provider "kubernetes" {
-  config_path = "/Users/patrickmunne/git/tfe_fdo_gcp_openshift/gcp/auth/kubeconfig"
+  config_path = "${path.module}/../gcp/auth/kubeconfig"
 }
 
 provider "helm" {
   kubernetes {
-    config_path = "/Users/patrickmunne/git/tfe_fdo_gcp_openshift/gcp/auth/kubeconfig"
+    config_path = "${path.module}/../gcp/auth/kubeconfig"
   }
 }
