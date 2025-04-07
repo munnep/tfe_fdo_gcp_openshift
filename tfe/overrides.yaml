@@ -10,6 +10,19 @@ image:
 openshift:
   # If true, the Helm chart will create necessary configuration for running its components on OpenShift.
   enabled: true  
+# agentWorkerPodTemplate:
+#   metadata:
+#     labels:
+#       info: pod-template-info-patrick
+#   spec:
+#     containers:
+#     - resources:
+#         requests:
+#           memory: "4000Mi"
+#           cpu: "950m"
+#         limits:
+#           memory: "5000Mi"
+#           cpu: "1350m"      
 env:
   variables:
     TFE_HOSTNAME: ${fqdn}
